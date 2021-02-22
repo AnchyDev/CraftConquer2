@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    compile files('../Gradle Libraries/spigot-api-1.16.4-R0.1.jar', '../Gradle Libraries/spigot-1.16.5.jar')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task copyToOutput{
+    doLast {
+        copy {
+            from "./build/libs"
+            into "../Output"
+            include "*.jar"
+        }
+    }
+}
