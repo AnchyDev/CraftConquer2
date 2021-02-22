@@ -22,27 +22,26 @@ public class Main extends JavaPlugin
     @Override
     public void onEnable()
     {
-        try
-        {
-            loadConfig();
-        } catch (IOException e)
-        {
-            this.getLogger().log(Level.SEVERE, "Failed to load configs.");
-            e.printStackTrace();
-
-            this.getPluginLoader().disablePlugin(this);
-            return;
-        }
+        loadConfig();
         registerCommands();
     }
 
-    private void loadConfig() throws IOException
+    private void loadConfig()
     {
         var pathCraftConquer = Path.of(Paths.craftConquer);
 
         if(Files.notExists(pathCraftConquer))
         {
-            Files.createDirectory(pathCraftConquer);
+            try
+            {
+                Files.createDirectory(pathCraftConquer);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to create directory '"+pathCraftConquer.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+            }
         }
 
         var pathLocaleConfig = Path.of(Paths.localeConfig);
@@ -52,13 +51,43 @@ public class Main extends JavaPlugin
             var serializer = new Gson();
             localeConfig = new LocaleConfig();
             var data = serializer.toJson(localeConfig);
-            Files.createFile(pathLocaleConfig);
-            Files.writeString(pathLocaleConfig, data);
+
+            try
+            {
+                Files.createFile(pathLocaleConfig);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to create file '"+pathLocaleConfig.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+            }
+
+            try
+            {
+                Files.writeString(pathLocaleConfig, data);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to write to file '"+pathLocaleConfig.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+            }
         }
         else
         {
             var serializer = new Gson();
-            var json = Files.readString(pathLocaleConfig);
+            String json = null;
+            try
+            {
+                json = Files.readString(pathLocaleConfig);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to read from file '"+pathLocaleConfig.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+            }
             localeConfig = serializer.fromJson(json, LocaleConfig.class);
         }
     }
