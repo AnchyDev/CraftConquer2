@@ -44,6 +44,22 @@ public class Main extends JavaPlugin
             }
         }
 
+        var pathLocales = Path.of(Paths.locales);
+
+        if(Files.notExists(pathLocales))
+        {
+            try
+            {
+                Files.createDirectory(pathLocales);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to create directory '"+pathLocales.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+            }
+        }
+
         var pathLocaleConfig = Path.of(Paths.localeConfig);
 
         if(Files.notExists(pathLocaleConfig))
