@@ -2,10 +2,8 @@ package net.anchy.craftconquer.command;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.anchy.craftconquer.Main;
 import net.anchy.craftconquer.util.Locale;
 import net.anchy.craftconquer.util.Permission;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -18,7 +16,7 @@ import java.util.Map;
 public abstract class BaseCommand implements TabExecutor
 {
     @Getter
-    private HashMap<String, ISubCommand> subCommands;
+    private final HashMap<String, ISubCommand> subCommands;
 
     @Getter @Setter
     private String command;
