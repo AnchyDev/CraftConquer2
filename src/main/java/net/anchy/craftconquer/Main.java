@@ -7,6 +7,7 @@ import net.anchy.craftconquer.command.craftconquer.CommandCraftConquer;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandModules;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandList;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandPing;
+import net.anchy.craftconquer.config.CraftConquerConfig;
 import net.anchy.craftconquer.config.LocaleConfig;
 import net.anchy.craftconquer.module.ModuleRegistry;
 import net.anchy.craftconquer.module.grassseeds.ModuleGrassSeeds;
@@ -21,6 +22,9 @@ import java.util.logging.Level;
 
 public class Main extends JavaPlugin
 {
+    @Getter
+    private CraftConquerConfig craftConfig;
+
     @Getter
     private LocaleConfig localeConfig;
 
@@ -63,6 +67,56 @@ public class Main extends JavaPlugin
             } catch (IOException e)
             {
                 this.getLogger().log(Level.SEVERE, "Failed to create directory '"+pathCraftConquer.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+                return;
+            }
+        }
+
+        var pathCraftConquerConfig = Path.of(Paths.craftConquerConfig);
+
+        if(Files.notExists(pathCraftConquerConfig))
+        {
+            var serializer = new GsonBuilder().setPrettyPrinting().create();
+            craftConfig = new CraftConquerConfig();
+            var data = serializer.toJson(craftConfig);
+
+            try
+            {
+                Files.createFile(pathCraftConquerConfig);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to create file '"+pathCraftConquerConfig.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+                return;
+            }
+
+            try
+            {
+                Files.writeString(pathCraftConquerConfig, data);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to write to file '"+pathCraftConquerConfig.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+                return;
+            }
+        }
+        else
+        {
+
+            try
+            {
+                var serializer = new Gson();
+                var json = Files.readString(pathCraftConquerConfig);
+                craftConfig = serializer.fromJson(json, CraftConquerConfig.class);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to read from file '"+pathCraftConquerConfig.toString()+"'.");
                 e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
