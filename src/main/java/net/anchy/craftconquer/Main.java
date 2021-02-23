@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import net.anchy.craftconquer.command.craftconquer.CommandCraftConquer;
+import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandGive;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandList;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandPing;
 import net.anchy.craftconquer.config.LocaleConfig;
+import net.anchy.craftconquer.module.ModuleRegistry;
+import net.anchy.craftconquer.module.grassseeds.ModuleGrassSeeds;
 import net.anchy.craftconquer.util.Locale;
 import net.anchy.craftconquer.util.Paths;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +28,9 @@ public class Main extends JavaPlugin
     private Locale locale;
 
     @Getter
+    private ModuleRegistry moduleRegistry;
+
+    @Getter
     private static Main inst;
 
     private boolean firstRun = false;
@@ -40,6 +46,7 @@ public class Main extends JavaPlugin
         loadConfig();
         loadLocale();
         registerCommands();
+        registerModules();
     }
 
     private void loadConfig()
@@ -189,6 +196,13 @@ public class Main extends JavaPlugin
         var commandCraftConquer = new CommandCraftConquer();
         commandCraftConquer.registerSubCommand(new SubCommandList());
         commandCraftConquer.registerSubCommand(new SubCommandPing());
+        commandCraftConquer.registerSubCommand(new SubCommandGive());
         this.getCommand(commandCraftConquer.getCommand()).setExecutor(commandCraftConquer);
+    }
+
+    private void registerModules()
+    {
+        moduleRegistry = new ModuleRegistry();
+        moduleRegistry.register(new ModuleGrassSeeds());
     }
 }
