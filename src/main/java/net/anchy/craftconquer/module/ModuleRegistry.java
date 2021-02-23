@@ -1,5 +1,6 @@
 package net.anchy.craftconquer.module;
 
+import lombok.Getter;
 import net.anchy.craftconquer.Main;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 public class ModuleRegistry
 {
+    @Getter
     private List<ModuleListener> modules;
 
     public ModuleRegistry()

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import net.anchy.craftconquer.command.craftconquer.CommandCraftConquer;
-import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandGive;
+import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandModules;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandList;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandPing;
 import net.anchy.craftconquer.config.LocaleConfig;
@@ -196,7 +196,7 @@ public class Main extends JavaPlugin
         var commandCraftConquer = new CommandCraftConquer();
         commandCraftConquer.registerSubCommand(new SubCommandList());
         commandCraftConquer.registerSubCommand(new SubCommandPing());
-        commandCraftConquer.registerSubCommand(new SubCommandGive());
+        commandCraftConquer.registerSubCommand(new SubCommandModules());
         this.getCommand(commandCraftConquer.getCommand()).setExecutor(commandCraftConquer);
     }
 
