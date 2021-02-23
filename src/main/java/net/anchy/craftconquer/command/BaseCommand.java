@@ -2,6 +2,9 @@ package net.anchy.craftconquer.command;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.anchy.craftconquer.Main;
+import net.anchy.craftconquer.util.Locale;
+import net.anchy.craftconquer.util.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -52,9 +55,9 @@ public abstract class BaseCommand implements TabExecutor
 
             if (args[0].equalsIgnoreCase(subCommand))
             {
-                if(!sender.hasPermission(getCommand().toLowerCase() + "." + subCommand.toLowerCase()))
+                if(!Permission.hasPermission(sender, getCommand().toLowerCase(), subCommand.toLowerCase()))
                 {
-                    sender.sendMessage("You do not have permission to execute this command.");
+                    sender.sendMessage(Locale.getLocale().getMessage("ERR_NO_PERMISSION"));
                     continue;
                 }
 
@@ -81,7 +84,7 @@ public abstract class BaseCommand implements TabExecutor
             {
                 String subCommand = entry.getKey();
 
-                if(!sender.hasPermission(getCommand().toLowerCase() + "." + subCommand.toLowerCase()))
+                if(!Permission.hasPermission(sender, getCommand().toLowerCase(), subCommand.toLowerCase()))
                 {
                     continue;
                 }

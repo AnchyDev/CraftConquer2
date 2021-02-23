@@ -1,11 +1,13 @@
 package net.anchy.craftconquer;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import net.anchy.craftconquer.command.craftconquer.CommandCraftConquer;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandList;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandPing;
 import net.anchy.craftconquer.config.LocaleConfig;
+import net.anchy.craftconquer.util.Locale;
 import net.anchy.craftconquer.util.Paths;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,10 +21,24 @@ public class Main extends JavaPlugin
     @Getter
     private LocaleConfig localeConfig;
 
+    @Getter
+    private Locale locale;
+
+    @Getter
+    private static Main inst;
+
+    private boolean firstRun = false;
+
     @Override
     public void onEnable()
     {
+        if(inst == null)
+        {
+            inst = this;
+        }
+
         loadConfig();
+        loadLocale();
         registerCommands();
     }
 
@@ -35,12 +51,15 @@ public class Main extends JavaPlugin
             try
             {
                 Files.createDirectory(pathCraftConquer);
+
+                firstRun = true;
             } catch (IOException e)
             {
                 this.getLogger().log(Level.SEVERE, "Failed to create directory '"+pathCraftConquer.toString()+"'.");
                 e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
+                return;
             }
         }
 
@@ -57,6 +76,7 @@ public class Main extends JavaPlugin
                 e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
+                return;
             }
         }
 
@@ -64,7 +84,7 @@ public class Main extends JavaPlugin
 
         if(Files.notExists(pathLocaleConfig))
         {
-            var serializer = new Gson();
+            var serializer = new GsonBuilder().setPrettyPrinting().create();
             localeConfig = new LocaleConfig();
             var data = serializer.toJson(localeConfig);
 
@@ -77,6 +97,7 @@ public class Main extends JavaPlugin
                 e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
+                return;
             }
 
             try
@@ -88,23 +109,88 @@ public class Main extends JavaPlugin
                 e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
+                return;
             }
         }
         else
         {
-            var serializer = new Gson();
-            String json = null;
+
             try
             {
-                json = Files.readString(pathLocaleConfig);
+                var serializer = new Gson();
+                var json = Files.readString(pathLocaleConfig);
+                localeConfig = serializer.fromJson(json, LocaleConfig.class);
             } catch (IOException e)
             {
                 this.getLogger().log(Level.SEVERE, "Failed to read from file '"+pathLocaleConfig.toString()+"'.");
                 e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
+                return;
             }
-            localeConfig = serializer.fromJson(json, LocaleConfig.class);
+        }
+    }
+
+    private void loadLocale()
+    {
+        var localeId = localeConfig.getLocale();
+        var localePath = Path.of(Paths.locales.concat("/" + localeId + ".json"));
+
+        if(firstRun)
+        {
+            var serializer = new GsonBuilder().setPrettyPrinting().create();
+            locale = new Locale();
+            var data = serializer.toJson(locale);
+
+            try
+            {
+                Files.createFile(localePath);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to create locale '"+localePath.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+                return;
+            }
+
+            try
+            {
+                Files.writeString(localePath, data);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to write to locale '"+localePath.toString()+"'.");
+                e.printStackTrace();
+
+                this.getPluginLoader().disablePlugin(this);
+                return;
+            }
+        }
+        else
+        {
+            if(Files.notExists(localePath))
+            {
+                this.getLogger().log(Level.SEVERE, "Locale '"+localePath.toString()+"' does not exist..");
+
+                this.getPluginLoader().disablePlugin(this);
+                return;
+            }
+            else
+            {
+                try
+                {
+                    var serializer = new Gson();
+                    var json = Files.readString(localePath);
+                    locale = serializer.fromJson(json, Locale.class);
+                } catch (IOException e)
+                {
+                    this.getLogger().log(Level.SEVERE, "Failed to read from locale '"+localePath.toString()+"'.");
+                    e.printStackTrace();
+
+                    this.getPluginLoader().disablePlugin(this);
+                    return;
+                }
+            }
         }
     }
 
