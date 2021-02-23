@@ -2,6 +2,7 @@ package net.anchy.craftconquer.command.craftconquer.subcommand;
 
 import net.anchy.craftconquer.Main;
 import net.anchy.craftconquer.command.ISubCommand;
+import net.anchy.craftconquer.util.Locale;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -28,7 +29,7 @@ public class SubCommandModules implements ISubCommand
             sj.add(module.getName());
         }
 
-        sender.sendMessage(sj.toString());
+        sender.sendMessage(Locale.getLocale().getMessage("LIST_MODULES") + sj.toString());
     }
 
     @Override

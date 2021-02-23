@@ -1,6 +1,7 @@
 package net.anchy.craftconquer.command.craftconquer;
 
 import net.anchy.craftconquer.command.BaseCommand;
+import net.anchy.craftconquer.util.Locale;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -26,7 +27,7 @@ public class CommandCraftConquer extends BaseCommand
                 sj.add(subcommand.getKey());
             }
 
-            sender.sendMessage("Command(s): " + sj.toString());
+            sender.sendMessage(Locale.getLocale().getMessage("LIST_COMMANDS") + sj.toString());
         }
 
         return super.onCommand(sender, command, alias, args);
