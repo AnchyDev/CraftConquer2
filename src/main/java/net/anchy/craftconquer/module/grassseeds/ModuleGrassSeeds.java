@@ -15,7 +15,6 @@ public class ModuleGrassSeeds extends ModuleListener
 
     public ModuleGrassSeeds()
     {
-        System.out.println("Setting up GrassSeeds module.");
         seedBag = new WeightBag<>();
         seedBag.addItem(Material.WHEAT_SEEDS, 0.1);
         seedBag.addItem(Material.PUMPKIN_SEEDS, 0.1);

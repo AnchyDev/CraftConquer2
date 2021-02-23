@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import net.anchy.craftconquer.command.craftconquer.CommandCraftConquer;
+import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandJump;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandModules;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandList;
 import net.anchy.craftconquer.command.craftconquer.subcommand.SubCommandPing;
 import net.anchy.craftconquer.config.CraftConquerConfig;
 import net.anchy.craftconquer.config.LocaleConfig;
 import net.anchy.craftconquer.module.ModuleRegistry;
+import net.anchy.craftconquer.module.dungeontest.ModuleDungeonTest;
 import net.anchy.craftconquer.module.grassseeds.ModuleGrassSeeds;
 import net.anchy.craftconquer.util.Locale;
 import net.anchy.craftconquer.util.Paths;
@@ -251,6 +253,7 @@ public class Main extends JavaPlugin
         commandCraftConquer.registerSubCommand(new SubCommandList());
         commandCraftConquer.registerSubCommand(new SubCommandPing());
         commandCraftConquer.registerSubCommand(new SubCommandModules());
+        commandCraftConquer.registerSubCommand(new SubCommandJump());
         this.getCommand(commandCraftConquer.getCommand()).setExecutor(commandCraftConquer);
     }
 
@@ -258,5 +261,6 @@ public class Main extends JavaPlugin
     {
         moduleRegistry = new ModuleRegistry();
         moduleRegistry.register(new ModuleGrassSeeds());
+        moduleRegistry.register(new ModuleDungeonTest());
     }
 }
