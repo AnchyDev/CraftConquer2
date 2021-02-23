@@ -168,28 +168,18 @@ public class Main extends JavaPlugin
         }
         else
         {
-            if(Files.notExists(localePath))
+            try
             {
-                this.getLogger().log(Level.SEVERE, "Locale '"+localePath.toString()+"' does not exist..");
+                var serializer = new Gson();
+                var json = Files.readString(localePath);
+                locale = serializer.fromJson(json, Locale.class);
+            } catch (IOException e)
+            {
+                this.getLogger().log(Level.SEVERE, "Failed to read from locale '"+localePath.toString()+"'.");
+                e.printStackTrace();
 
                 this.getPluginLoader().disablePlugin(this);
                 return;
-            }
-            else
-            {
-                try
-                {
-                    var serializer = new Gson();
-                    var json = Files.readString(localePath);
-                    locale = serializer.fromJson(json, Locale.class);
-                } catch (IOException e)
-                {
-                    this.getLogger().log(Level.SEVERE, "Failed to read from locale '"+localePath.toString()+"'.");
-                    e.printStackTrace();
-
-                    this.getPluginLoader().disablePlugin(this);
-                    return;
-                }
             }
         }
     }
