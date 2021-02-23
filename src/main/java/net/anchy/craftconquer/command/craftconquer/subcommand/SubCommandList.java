@@ -1,6 +1,7 @@
 package net.anchy.craftconquer.command.craftconquer.subcommand;
 
 import net.anchy.craftconquer.command.ISubCommand;
+import net.anchy.craftconquer.util.Locale;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,18 +19,18 @@ public class SubCommandList implements ISubCommand
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command command, String s, String[] args)
+    public void onCommand(CommandSender sender, Command command, String alias, String[] args)
     {
         var sj = new StringJoiner(", ");
         for(var player : Bukkit.getOnlinePlayers())
         {
             sj.add(player.getName());
         }
-        sender.sendMessage("Online Player(s): " + sj.toString());
+        sender.sendMessage(Locale.getLocale().getMessage("LIST_PLAYERS") + sj.toString());
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args)
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
     {
         return new ArrayList<>();
     }

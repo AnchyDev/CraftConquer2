@@ -8,6 +8,6 @@ import org.bukkit.command.CommandSender;
 public interface ISubCommand
 {
     String getCommand();
-    void onCommand(CommandSender sender, Command command, String s, String[] args);
-    List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args);
+    void onCommand(CommandSender sender, Command command, String alias, String[] args);
+    List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args);
 }

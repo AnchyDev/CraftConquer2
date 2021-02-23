@@ -136,7 +136,7 @@ public class Main extends JavaPlugin
         var localeId = localeConfig.getLocale();
         var localePath = Path.of(Paths.locales.concat("/" + localeId + ".json"));
 
-        if(firstRun)
+        if(!Files.exists(localePath))
         {
             var serializer = new GsonBuilder().setPrettyPrinting().create();
             locale = new Locale();

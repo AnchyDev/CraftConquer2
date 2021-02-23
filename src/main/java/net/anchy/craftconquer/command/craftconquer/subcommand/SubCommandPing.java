@@ -16,13 +16,13 @@ public class SubCommandPing implements ISubCommand
     }
 
     @Override
-    public void onCommand(CommandSender sender, Command command, String s, String[] args)
+    public void onCommand(CommandSender sender, Command command, String alias, String[] args)
     {
         sender.sendMessage("Pong!");
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args)
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
     {
         return new ArrayList<>();
     }

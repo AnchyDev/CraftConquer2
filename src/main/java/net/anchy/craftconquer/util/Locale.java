@@ -12,6 +12,7 @@ public class Locale
     {
         localeMessages = new HashMap<>();
         localeMessages.put("ERR_NO_PERMISSION", "You do not have permission to run this command.");
+        localeMessages.put("LIST_PLAYERS", "Online Player(s): ");
     }
 
     public String getMessage(String key)
