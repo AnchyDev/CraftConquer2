@@ -13,6 +13,7 @@ import net.anchy.craftconquer.config.LocaleConfig;
 import net.anchy.craftconquer.module.ModuleRegistry;
 import net.anchy.craftconquer.module.dungeontest.ModuleDungeonTest;
 import net.anchy.craftconquer.module.grassseeds.ModuleGrassSeeds;
+import net.anchy.craftconquer.module.regiontest.ModuleRegionTest;
 import net.anchy.craftconquer.util.Locale;
 import net.anchy.craftconquer.util.Paths;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -262,5 +263,6 @@ public class Main extends JavaPlugin
         moduleRegistry = new ModuleRegistry();
         moduleRegistry.register(new ModuleGrassSeeds());
         moduleRegistry.register(new ModuleDungeonTest());
+        moduleRegistry.register(new ModuleRegionTest());
     }
 }
