@@ -2,6 +2,7 @@ package net.anchy.craftconquer.module.regiontest;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.anchy.craftconquer.Main;
 import net.anchy.craftconquer.module.ModuleListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,7 +12,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -36,6 +39,69 @@ public class ModuleRegionTest extends ModuleListener
     public String getName()
     {
         return "RegionTest";
+    }
+
+    @EventHandler
+    public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event)
+    {
+        if(event.getMessage().equalsIgnoreCase("delete"))
+        {
+            event.getPlayer().sendMessage("Deleting blocks");
+            for(var block : blocksFromTwoPoints2(loc1, loc2))
+            {
+                new BukkitRunnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        block.setType(Material.AIR);
+                    }
+                }.runTask(Main.getInst());
+
+            }
+        }
+
+        if(event.getMessage().equalsIgnoreCase("fill"))
+        {
+            event.getPlayer().sendMessage("Filling blocks");
+            for(var block : blocksFromTwoPoints2(loc1, loc2))
+            {
+                new BukkitRunnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        block.setType(Material.GLASS);
+                    }
+                }.runTask(Main.getInst());
+
+            }
+        }
+
+        if(event.getMessage().equalsIgnoreCase("toggle"))
+        {
+            event.getPlayer().sendMessage("Toggling blocks");
+            for(var block : blocksFromTwoPoints2(loc1, loc2))
+            {
+                new BukkitRunnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        if(block.getType() == Material.BARRIER)
+                        {
+                            // you should probably store the old blocks in a list somewhere instead of just changing it back to stone :))
+                            block.setType(Material.STONE);
+                        }
+                        else
+                        {
+                            block.setType(Material.BARRIER);
+                        }
+                    }
+                }.runTask(Main.getInst());
+
+            }
+        }
     }
 
     @EventHandler
@@ -152,6 +218,34 @@ public class ModuleRegionTest extends ModuleListener
 
                         blocks.add(new Vector3(block.getX(), block.getY(), block.getZ(), corner));
                     }
+                }
+            }
+        }
+
+        return blocks;
+    }
+
+    public List<Block> blocksFromTwoPoints2(Location loc1, Location loc2)
+    {
+        var blocks = new ArrayList<Block>();
+
+        int topBlockX = (loc1.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
+        int bottomBlockX = (loc1.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
+
+        int topBlockY = (loc1.getBlockY() < loc2.getBlockY() ? loc2.getBlockY() : loc1.getBlockY());
+        int bottomBlockY = (loc1.getBlockY() > loc2.getBlockY() ? loc2.getBlockY() : loc1.getBlockY());
+
+        int topBlockZ = (loc1.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
+        int bottomBlockZ = (loc1.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
+
+        for(int x = bottomBlockX; x <= topBlockX; x++)
+        {
+            for(int z = bottomBlockZ; z <= topBlockZ; z++)
+            {
+                for(int y = bottomBlockY; y <= topBlockY; y++)
+                {
+                    var block = loc1.getWorld().getBlockAt(x, y, z);
+                    blocks.add(block);
                 }
             }
         }
